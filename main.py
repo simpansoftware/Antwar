@@ -24,6 +24,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    clock.tick(60)
+    clock.tick(24)
 
 pygame.quit()
