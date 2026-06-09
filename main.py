@@ -1,6 +1,5 @@
 import pygame
-import random
-import time
+import numpy
 
 pygame.init()
 xres = 640
@@ -12,17 +11,13 @@ size = 2
 
 running = True
 while running:
-    # so i cant make it fully random without causing performance issues
-    # thank you python for being slow
-    for x in range(0, xres, size):
-        for y in range(0, yres, size):
-            thing = random.randrange(2)
-            if thing == 1:
-                color = (255, 255, 255)
-            else:
-                color = (0, 0, 0)
-            pygame.draw.rect(screen, color, (x, y, size, size))
-
+    # update: we use numpy because thats way faster than python on its own
+    width = xres // size
+    height = yres // size
+    noise = numpy.random.randint(0, 2, (xres // size, yres // size), dtype=numpy.uint8) * 255
+    # i sincerely thank gpt5 for this function below for my optimization
+    surface = pygame.surfarray.make_surface(numpy.repeat(numpy.repeat(numpy.repeat(noise[:, :, None], 3, axis=2),size, axis=0), size, axis=1))
+    screen.blit(surface, (0, 0))
     pygame.display.flip()
 
     for event in pygame.event.get():
